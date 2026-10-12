@@ -1,0 +1,54 @@
+name: marks
+version: "0.1.0"
+license: free
+runtime: binary
+binary: handler.sh
+actions:
+  - ping
+  - token
+  - bookmarklet
+  - add
+  - list
+  - get
+  - search
+  - tag
+  - untag
+  - folder
+  - remove
+  - export
+  - import
+  - merge
+  - strip
+  - listen
+  - where
+  - finish
+  - clear
+timeout_sec: 30
+data_dir: data
+needs_docker: false
+platforms:
+  linux-amd64: { tested: true, binary: dist/marks-linux-amd64 }
+  linux-arm64: { tested: false, binary: dist/marks-linux-arm64 }
+  darwin-amd64: { tested: false, binary: dist/marks-darwin-amd64 }
+  darwin-arm64: { tested: false, binary: dist/marks-darwin-arm64 }
+  windows-amd64: { tested: false, binary: dist/marks-windows-amd64.exe }
+  windows-arm64: { tested: false, binary: dist/marks-windows-arm64.exe }
+requires:
+  protocol: 1
+  core: ">=0.1.0"
+description: Local-only bookmarks. Bookmarklet talks to 127.0.0.1 with a home token. Folders and tags stay under $KRAKEN_HOME.
+homepage: https://kraken.topta.co
+hooks:
+  after_run:
+    - tentacle: marks-file
+      action: convert
+      optional: true
+      priority: 10
+      if: ok
+      when: ["marks"]
+    - tentacle: save-text
+      action: convert
+      optional: true
+      priority: 20
+      if: ok
+      when: ["marks"]
